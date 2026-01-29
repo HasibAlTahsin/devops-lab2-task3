@@ -1,0 +1,6 @@
+---
+- name: Import user creation tasks
+  ansible.builtin.import_tasks: create_users.yml
+
+- name: Import demo feature tasks
+  ansible.builtin.import_tasks: demo_features.yml

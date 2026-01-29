@@ -1,0 +1,30 @@
+---
+- name: "Verify NTP sources (block/rescue demo)"
+  block:
+    - name: "Wait for chrony sources to be available"
+      ansible.builtin.command: chronyc sources -v
+      register: chrony_sources
+      retries: 5
+      delay: 3
+      until: chrony_sources.rc == 0
+      changed_when: false
+
+    - name: "Show chrony sources"
+      ansible.builtin.debug:
+        var: chrony_sources.stdout_lines
+
+  rescue:
+    - name: "Chrony verification failed - show service status (ignore_errors demo)"
+      ansible.builtin.command: systemctl status chrony --no-pager
+      register: chrony_status
+      changed_when: false
+      failed_when: false
+    - name: "Debug chrony status"
+      ansible.builtin.debug:
+        var: chrony_status.stdout_lines
+      failed_when: false
+      changed_when: false
+  always:
+    - name: "Always: print which servers are configured"
+      ansible.builtin.debug:
+        msg: "Configured NTP servers: {{ ntp_servers }}"

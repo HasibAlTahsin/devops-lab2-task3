@@ -1,0 +1,34 @@
+---
+- name: "Create deploy directory (root) and allow devops group write"
+  ansible.builtin.file:
+    path: "{{ deploy_dir }}"
+    state: directory
+    owner: root
+    group: "{{ devops_group }}"
+    mode: "2775"
+- name: "Create a file in deploy dir (as root), but owned by devops"
+  ansible.builtin.copy:
+    dest: "{{ deploy_dir }}/created_by_devops.txt"
+    content: "Created by Ansible (owned by devops)\n"
+    owner: "{{ devops_user }}"
+    group: "{{ devops_group }}"
+    mode: "0644"
+- name: "Create a file as devops user (become_user demo - safe path)"
+  ansible.builtin.copy:
+    dest: "/home/{{ devops_user }}/become_user_demo.txt"
+    content: "This file was created using become_user={{ devops_user }}\n"
+    owner: "{{ devops_user }}"
+    group: "{{ devops_group }}"
+    mode: "0644"
+  become_user: "{{ devops_user }}"
+- name: "Run once: show controller hostname (run_once demo)"
+  ansible.builtin.command: hostname
+  register: controller_hostname
+  changed_when: false
+  run_once: true
+  delegate_to: localhost
+- name: "Debug controller hostname (delegated result)"
+  ansible.builtin.debug:
+    msg: "Control node hostname: {{ controller_hostname.stdout }}"
+  run_once: true
+  delegate_to: localhost

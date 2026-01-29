@@ -1,0 +1,9 @@
+---
+- name: Import chrony install tasks
+  ansible.builtin.import_tasks: install.yml
+
+- name: Import chrony configure tasks
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Import chrony verify tasks
+  ansible.builtin.import_tasks: verify.yml

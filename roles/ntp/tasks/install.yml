@@ -1,0 +1,7 @@
+---
+- name: "Install chrony"
+  ansible.builtin.apt:
+    name: chrony
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == "Debian"

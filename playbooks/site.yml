@@ -1,0 +1,11 @@
+---
+- name: "Lab2 Task3 - Ansible automation scenarios"
+  hosts: all
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/../group_vars/all/main.yml"
+    - "{{ playbook_dir }}/../group_vars/all/vault.yml"
+  roles:
+    - { role: users, tags: ["light", "users"] }
+    - { role: firewall, tags: ["light", "firewall"] }
+    - { role: ntp, tags: ["advanced", "ntp"] }

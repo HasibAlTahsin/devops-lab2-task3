@@ -1,0 +1,38 @@
+---
+- name: "Set fact: hashed password from vault secret"
+  ansible.builtin.set_fact:
+    devops_password_hash: "{{ devops_user_password | password_hash('sha512') }}"
+- name: "Create group"
+  ansible.builtin.group:
+    name: "{{ devops_group }}"
+    state: present
+- name: "Create devops user (password from vault)"
+  ansible.builtin.user:
+    name: "{{ devops_user }}"
+    group: "{{ devops_group }}"
+    shell: "{{ devops_shell }}"
+    create_home: true
+    password: "{{ devops_password_hash }}"
+    state: present
+- name: "Add devops to sudo group (Debian family)"
+  ansible.builtin.user:
+    name: "{{ devops_user }}"
+    groups: sudo
+    append: true
+  when: ansible_facts['os_family'] == "Debian"
+- name: "Create extra users using loop"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    shell: "{{ item.shell }}"
+    create_home: true
+    state: present
+  loop: "{{ extra_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+- name: "Ensure these users exist (with_items demo)"
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "legacyuser1"
+    - "legacyuser2"

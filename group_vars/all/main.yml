@@ -1,0 +1,25 @@
+# Global defaults for all hosts
+devops_user: "devops"
+devops_group: "devops"
+devops_shell: "/bin/bash"
+
+# Demo: will be overridden for prod via group_vars/prod (precedence)
+ntp_servers:
+  - "pool.ntp.org"
+  - "time.google.com"
+
+# Firewall ports (UFW)
+allowed_tcp_ports:
+  - 22
+  - 80
+  - 443
+
+# Extra users (loop)
+extra_users:
+  - name: "appuser"
+    shell: "/bin/bash"
+  - name: "auditor"
+    shell: "/bin/bash"
+
+# Demo for become_user
+deploy_dir: "/opt/labapp"

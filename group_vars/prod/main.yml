@@ -1,0 +1,4 @@
+# This overrides group_vars/all/main.yml for prod hosts only
+ntp_servers:
+  - "time.cloudflare.com"
+  - "time.google.com"

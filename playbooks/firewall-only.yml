@@ -1,0 +1,12 @@
+---
+- name: "Firewall only (no facts)"
+  hosts: all
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - "{{ playbook_dir }}/../group_vars/all/main.yml"
+    - "{{ playbook_dir }}/../group_vars/all/vault.yml"
+
+  roles:
+    - firewall
